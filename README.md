@@ -104,12 +104,18 @@ then. Almost all of the per-poll cost is the camera starting its stream
 open/close cycles; the kernel logs
 `uvcvideo: Failed to set UVC probe control : -110`. The camera is read in a
 child process with a timeout precisely for this: the daemon kills it, warns
-once in the log and keeps going. Unplug and replug the camera, or reset it:
+once in the log and keeps going. Unplug and replug the camera, or reset it
+from a root shell by de-authorizing and re-authorizing the USB port:
 
 ```bash
 # <port> is the camera's directory under /sys/bus/usb/devices, e.g. 1-8
-pkexec sh -c 'echo 0 > /sys/bus/usb/devices/<port>/authorized; sleep 2; echo 1 > /sys/bus/usb/devices/<port>/authorized'
+echo 0 > /sys/bus/usb/devices/<port>/authorized
+sleep 2
+echo 1 > /sys/bus/usb/devices/<port>/authorized
 ```
+
+The plugin itself never elevates privileges: no sudo or pkexec is required or
+used by any of its code.
 
 ## Headless mode
 

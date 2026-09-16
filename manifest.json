@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "author": "ruben",
   "description": "Webcam presence for the Omarchy screensaver: starts it when nobody is there, dismisses it when you are back, with a bar switch",
+  "homepage": "https://github.com/rubenep13/auto-screensaver",
   "license": "MIT",
   "kinds": [
     "service",

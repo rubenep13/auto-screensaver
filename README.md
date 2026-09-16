@@ -19,7 +19,7 @@ propio de la barra (no arranca el salvapantallas en ninguno de los tres casos).
 ## Instalación
 
 ```bash
-omarchy plugin add https://<tu-remoto>/auto-screensaver.git --enable
+omarchy plugin add https://github.com/rubenep13/auto-screensaver.git --enable
 omarchy bar move ruben.auto-screensaver --section center --index 1   # junto a los indicadores
 ```
 

@@ -36,6 +36,8 @@ Item {
     systemdProbe.running = true
   }
 
+  property bool inTraceback: false
+
   function onDaemonLine(line) {
     line = String(line)
     if (line.indexOf("WARN:0@") !== -1) return  // OpenCV DNN chatter
@@ -44,7 +46,11 @@ Item {
       root.state = "running"
       root.backoffMs = 5000
     }
-    if (line.indexOf(" WARNING ") !== -1 || line.indexOf(" ERROR ") !== -1 || line.indexOf("Traceback") !== -1)
+    // Everything before the daemon reports "started" is setup output or a
+    // crash; afterwards only warnings, errors and full tracebacks matter.
+    if (line.indexOf("Traceback") !== -1) root.inTraceback = true
+    if (root.state !== "running" || root.inTraceback
+        || line.indexOf(" WARNING ") !== -1 || line.indexOf(" ERROR ") !== -1)
       root.log(line)
   }
 

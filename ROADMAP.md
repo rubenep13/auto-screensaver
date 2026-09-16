@@ -219,7 +219,14 @@ estados y con el daemon registrando "camera presence switched off/on".
 Hallazgo: `omarchy bar put --after` no respetó el ancla; `omarchy bar move
 --section center --index 1` sí.
 
-Siguiente: paso 3 (`Service.qml` supervisando el daemon) y paso 4 (repo = plugin).
+Pasos 3 y 4 (16 sep 2026): el repo es el plugin. `manifest.json` con
+`kinds: ["service","bar-widget"]` y `keepLoaded`, `Service.qml` supervisa
+`bin/auto-screensaver run` (setup idempotente del venv en
+`~/.local/share/auto-screensaver`, porque el shell vigila el directorio de plugins
+con `inotifywait -r`; reinicio con backoff 5→60 s; se aparta si la unidad systemd
+está activa; IPC `status`/`restart`). El daemon vive en `daemon/`, la unidad
+systemd queda como modo headless. Repo inicializado en git e instalado con
+`omarchy plugin add <ruta> --enable --yes`.
 
 **Riesgos**: el `Process` del shell hereda el entorno de `omarchy-shell`, no de
 la sesión de login (comprobar `OMARCHY_PATH`, `NOTIFY_SOCKET` desaparece: sin

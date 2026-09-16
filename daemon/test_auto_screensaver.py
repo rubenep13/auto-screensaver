@@ -419,3 +419,20 @@ class DisabledSwitchTest(unittest.TestCase):
             self.assertTrue(sw.path.exists())
             self.assertEqual(sw.toggle(), True)
             self.assertFalse(sw.path.exists())
+
+
+class SmokeTest(unittest.TestCase):
+    """Run the real entry point once, end to end, with no camera and no input monitor."""
+
+    def test_once_runs_to_completion(self):
+        import os, subprocess, sys, pathlib
+        try:
+            import cv2  # noqa: F401
+        except ImportError:
+            self.skipTest("cv2 not installed")
+        script = pathlib.Path(__file__).with_name("auto_screensaver.py")
+        env = dict(os.environ, AUTO_SCREENSAVER_LOG="journal")
+        r = subprocess.run([sys.executable, str(script), "--once", "--device", "/dev/null", "--idle-timeout", "0"],
+                           capture_output=True, text=True, timeout=60, env=env)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("no webcam", r.stdout)

@@ -48,7 +48,7 @@ status() {
   local flag=${XDG_STATE_HOME:-$HOME/.local/state}/auto-screensaver/disabled
   echo "switch:   $([[ -f $flag ]] && echo off || echo on)"
   echo "systemd:  $(systemctl --user is-active auto-screensaver.service 2>/dev/null || echo inactive)"
-  echo "shell:    $(omarchy-shell shell call ruben.auto-screensaver status 2>/dev/null || echo 'n/a')"
+  echo "shell:    $(omarchy-shell -q ruben.auto-screensaver status 2>/dev/null || echo 'n/a')"
   echo "venv:     $([[ -x $PY ]] && echo "$VENV" || echo missing)"
   echo "logs:     journalctl --user -t auto-screensaver -f   (or -u auto-screensaver in systemd mode)"
 }

@@ -13,6 +13,7 @@ import argparse
 import glob
 import json
 import logging
+import logging.handlers
 import os
 import re
 import select
@@ -743,7 +744,6 @@ def main(argv=None) -> int:
     if os.environ.get("AUTO_SCREENSAVER_LOG") == "journal":
         # Supervised by omarchy-shell: also log to journald so that
         # `journalctl --user -t auto-screensaver -f` works like the systemd mode.
-        import logging.handlers
         try:
             handler = logging.handlers.SysLogHandler(address="/dev/log")
             handler.ident = "auto-screensaver: "

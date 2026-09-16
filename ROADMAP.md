@@ -228,6 +228,14 @@ está activa; IPC `status`/`restart`). El daemon vive en `daemon/`, la unidad
 systemd queda como modo headless. Repo inicializado en git e instalado con
 `omarchy plugin add <ruta> --enable --yes`.
 
+Incidencias resueltas al desplegar: (a) Qt 6.11 devolvía "File name case
+mismatch" al cargar `Service.qml` porque el shell tenía cacheado el listado del
+directorio de cuando era un enlace sin ese fichero; un `omarchy restart shell`
+lo resolvió y una instalación limpia no lo sufre. (b) `import logging.handlers`
+dentro de `main()` hacía local a `logging`; el supervisor mostró el traceback y
+lo relanzó con backoff, que era justo su trabajo. Añadido test de humo que
+ejecuta `--once` de extremo a extremo.
+
 **Riesgos**: el `Process` del shell hereda el entorno de `omarchy-shell`, no de
 la sesión de login (comprobar `OMARCHY_PATH`, `NOTIFY_SOCKET` desaparece: sin
 watchdog de systemd, el `Service.qml` debe hacer de supervisor). Actualizaciones

@@ -30,7 +30,18 @@ el daemon muere lo relanza con espera creciente. Requisitos del sistema: `python
 con `venv`, `wayland-protocols` (para la detección de inactividad; sin él funciona
 solo con cámara) y una webcam UVC.
 
-Logs: `journalctl --user -t auto-screensaver -f`. Estado: `bin/auto-screensaver status`.
+Operación:
+
+```bash
+journalctl --user -t auto-screensaver -f          # log del daemon
+omarchy-shell ruben.auto-screensaver status       # estado del supervisor (JSON)
+omarchy-shell ruben.auto-screensaver restart      # relanzar el daemon
+bin/auto-screensaver status                       # resumen: interruptor, systemd, shell, venv
+```
+
+Si el plugin sustituye a un enlace simbólico que había en la misma ruta, el shell
+puede conservar en caché el listado antiguo del directorio y fallar al cargar
+`Service.qml` con "File name case mismatch"; `omarchy restart shell` lo arregla.
 
 ### Modo headless (systemd)
 

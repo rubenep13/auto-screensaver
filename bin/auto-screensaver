@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# auto-screensaver launcher.
+#
+#   auto-screensaver setup            create/refresh the python environment (idempotent)
+#   auto-screensaver run [args]       run the daemon in the foreground
+#   auto-screensaver once             one poll, print what the daemon sees
+#   auto-screensaver toggle|enable|disable   the bar switch, from the terminal
+#   auto-screensaver status           switch, daemon and environment state
+#   auto-screensaver test             run the unit tests
+#
+# The venv and the generated Wayland bindings live in
+# $XDG_DATA_HOME/auto-screensaver (not in the plugin checkout: omarchy-shell
+# watches ~/.config/omarchy/plugins recursively and would reload on every file).
+set -euo pipefail
+
+HERE=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
+DATA=${AUTO_SCREENSAVER_DATA:-${XDG_DATA_HOME:-$HOME/.local/share}/auto-screensaver}
+VENV=$DATA/venv
+PY=$VENV/bin/python
+DAEMON=$HERE/daemon/auto_screensaver.py
+export AUTO_SCREENSAVER_DATA=$DATA
+
+WL_XML=/usr/share/wayland/wayland.xml
+IDLE_XML=/usr/share/wayland-protocols/staging/ext-idle-notify/ext-idle-notify-v1.xml
+
+setup() {
+  mkdir -p "$DATA"
+  local stamp=$DATA/.setup-stamp want
+  want="$(sha256sum "$HERE/daemon/requirements.txt" | cut -c1-16) $(python3 --version 2>&1)"
+  if [[ -x $PY && -d $DATA/protocols && -f $stamp && $(<"$stamp") == "$want" ]]; then
+    return 0
+  fi
+  echo "auto-screensaver: setting up $VENV" >&2
+  [[ -x $PY ]] || python3 -m venv "$VENV"
+  "$PY" -m pip install --quiet --upgrade -r "$HERE/daemon/requirements.txt"
+  mkdir -p "$DATA/protocols"
+  if [[ -f $WL_XML && -f $IDLE_XML ]]; then
+    "$PY" -m pywayland.scanner -i "$WL_XML" "$IDLE_XML" -o "$DATA/protocols" >/dev/null 2>&1 \
+      || echo "auto-screensaver: warning: could not generate Wayland bindings; idle detection disabled" >&2
+  else
+    echo "auto-screensaver: warning: wayland-protocols not installed; idle detection disabled" >&2
+  fi
+  printf '%s' "$want" >"$stamp"
+  echo "auto-screensaver: environment ready" >&2
+}
+
+status() {
+  local flag=${XDG_STATE_HOME:-$HOME/.local/state}/auto-screensaver/disabled
+  echo "switch:   $([[ -f $flag ]] && echo off || echo on)"
+  echo "systemd:  $(systemctl --user is-active auto-screensaver.service 2>/dev/null || echo inactive)"
+  echo "shell:    $(omarchy-shell shell call ruben.auto-screensaver status 2>/dev/null || echo 'n/a')"
+  echo "venv:     $([[ -x $PY ]] && echo "$VENV" || echo missing)"
+  echo "logs:     journalctl --user -t auto-screensaver -f   (or -u auto-screensaver in systemd mode)"
+}
+
+case ${1:-} in
+  setup) setup ;;
+  run) setup; shift; exec "$PY" "$DAEMON" "$@" ;;
+  once) setup; exec "$PY" "$DAEMON" --once ;;
+  toggle|enable|disable) exec python3 "$DAEMON" "--$1" ;;
+  status) status ;;
+  test) setup; cd "$HERE/daemon" && exec "$PY" -m unittest -q test_auto_screensaver ;;
+  *) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

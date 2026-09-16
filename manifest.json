@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "ruben.auto-screensaver",
+  "name": "Camera presence",
+  "version": "0.2.0",
+  "author": "ruben",
+  "description": "Webcam presence for the Omarchy screensaver: starts it when nobody is there, dismisses it when you are back, with a bar switch",
+  "license": "MIT",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Camera presence",
+    "description": "Webcam presence detection for the Omarchy screensaver: click to switch it off or on",
+    "category": "Status",
+    "allowMultiple": false,
+    "defaultSection": "center"
+  }
+}

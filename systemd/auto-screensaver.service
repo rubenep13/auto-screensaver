@@ -1,0 +1,16 @@
+[Unit]
+Description=Webcam presence drives the Omarchy screensaver (OLED burn-in prevention)
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=notify
+ExecStart=@DIR@/bin/auto-screensaver run
+# The daemon pings every poll; a stalled main loop gets restarted.
+WatchdogSec=120
+Restart=on-failure
+RestartSec=5
+Nice=10
+
+[Install]
+WantedBy=graphical-session.target

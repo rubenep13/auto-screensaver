@@ -1,0 +1,28 @@
+# auto-screensaver configuration
+# Copy to ~/.config/auto-screensaver/config.toml. The daemon reloads it when it
+# changes; no restart needed. Command-line flags override these values.
+
+# Consecutive polls with nobody in front before starting the screensaver.
+absent_polls = 3
+
+# Face detector confidence threshold (0-1). Lower it if you get false "nobody".
+score = 0.6
+
+# Force a camera device. Leave commented to pick the first /dev/video* that works.
+# device = "/dev/video0"
+
+# Seconds a camera read may take before the device is considered hung.
+capture_timeout = 8.0
+
+# Seconds without keyboard or mouse input before the camera is consulted at
+# all. While you type or move the mouse you are obviously there, so no camera
+# is used. Set to 0 to always use the camera. Idle inhibitors count as input:
+# a fullscreen video keeps the screensaver away, as with Omarchy's own idle.
+idle_timeout = 30
+
+# Seconds between polls, by state.
+[intervals]
+present = 12     # somebody in front, screensaver off: nothing urgent
+absent = 3       # nobody yet below absent_polls: get to the threshold quickly
+active = 2       # screensaver on: dismiss it fast when you come back
+no_webcam = 15   # no camera, camera busy or hung: retry rarely

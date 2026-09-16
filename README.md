@@ -20,7 +20,7 @@ propio de la barra (no arranca el salvapantallas en ninguno de los tres casos).
 
 ```bash
 omarchy plugin add https://github.com/rubenep13/auto-screensaver.git --enable
-omarchy bar move ruben.auto-screensaver --section center --index 1   # junto a los indicadores
+omarchy bar move rubenep13.auto-screensaver --section center --index 1   # junto a los indicadores
 ```
 
 Al habilitarse, el servicio del plugin (`Service.qml`) ejecuta `bin/auto-screensaver run`.
@@ -34,8 +34,8 @@ Operación:
 
 ```bash
 journalctl --user -t auto-screensaver -f          # log del daemon
-omarchy-shell ruben.auto-screensaver status       # estado del supervisor (JSON)
-omarchy-shell ruben.auto-screensaver restart      # relanzar el daemon
+omarchy-shell rubenep13.auto-screensaver status       # estado del supervisor (JSON)
+omarchy-shell rubenep13.auto-screensaver restart      # relanzar el daemon
 bin/auto-screensaver status                       # resumen: interruptor, systemd, shell, venv
 ```
 
@@ -56,8 +56,8 @@ Si la unidad está activa, `Service.qml` lo detecta y no lanza un segundo daemon
 
 ### Desarrollo
 
-`~/.config/omarchy/plugins/ruben.auto-screensaver` es un checkout git normal:
-`omarchy plugin update ruben.auto-screensaver` trae los cambios. Para editar en
+`~/.config/omarchy/plugins/rubenep13.auto-screensaver` es un checkout git normal:
+`omarchy plugin update rubenep13.auto-screensaver` trae los cambios. Para editar en
 caliente, sustitúyelo por un enlace a tu clon; el shell recarga al guardar.
 El venv nunca va dentro del plugin: el shell vigila ese directorio de forma
 recursiva.

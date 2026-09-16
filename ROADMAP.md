@@ -204,7 +204,7 @@ y que lleve el daemon dentro. Investigado el 16 sep 2026 sobre el shell de Omarc
    instalación. Reinicia el proceso si muere. La unidad systemd pasa a ser
    opcional (modo sin shell).
 4. **Repo = plugin**: mover `auto_screensaver.py`, `models/`, `requirements.txt`
-   a `bin/` o `daemon/`; `manifest.json` con `id` tipo `ruben.auto-screensaver`,
+   a `bin/` o `daemon/`; `manifest.json` con `id` tipo `rubenep13.auto-screensaver`,
    `kinds: ["service", "bar-widget"]`, `barWidget.schema` con los ajustes
    principales (idle_timeout, absent_polls, intervals) para tenerlos en
    Ajustes > Barra además del TOML. `omarchy plugin validate .` en CI.
@@ -213,7 +213,7 @@ y que lleve el daemon dentro. Investigado el 16 sep 2026 sobre el shell de Omarc
 **Estado (16 sep 2026)**: pasos 1 y 2 hechos. `Switch` en el daemon con flag
 `~/.local/state/auto-screensaver/disabled`, CLI `--toggle/--enable/--disable`
 con notificación, y `plugin/` (manifest + `Widget.qml` sobre `BarIconButton`)
-enlazado en `~/.config/omarchy/plugins/ruben.auto-screensaver`, en el centro de
+enlazado en `~/.config/omarchy/plugins/rubenep13.auto-screensaver`, en el centro de
 la barra tras los indicadores. Verificado con captura de pantalla en ambos
 estados y con el daemon registrando "camera presence switched off/on".
 Hallazgo: `omarchy bar put --after` no respetó el ancla; `omarchy bar move

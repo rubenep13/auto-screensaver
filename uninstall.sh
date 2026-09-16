@@ -1,7 +1,7 @@
 #!/bin/bash
 # Removes the systemd user service (headless mode). The shell plugin, if
 # installed, keeps running the daemon; remove it with
-#   omarchy plugin remove ruben.auto-screensaver
+#   omarchy plugin remove rubenep13.auto-screensaver
 set -euo pipefail
 systemctl --user disable --now auto-screensaver.service 2>/dev/null || true
 rm -f ~/.config/systemd/user/auto-screensaver.service

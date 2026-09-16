@@ -106,7 +106,7 @@ Item {
   }
 
   IpcHandler {
-    target: "ruben.auto-screensaver"
+    target: "rubenep13.auto-screensaver"
 
     function status(): string {
       return JSON.stringify({

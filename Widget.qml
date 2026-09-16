@@ -8,7 +8,7 @@ import qs.Ui
 // daemon checks on every poll. Present = camera presence off.
 BarWidget {
   id: root
-  moduleName: "ruben.auto-screensaver"
+  moduleName: "rubenep13.auto-screensaver"
 
   readonly property string home: Quickshell.env("HOME")
   readonly property string xdgState: Quickshell.env("XDG_STATE_HOME")
